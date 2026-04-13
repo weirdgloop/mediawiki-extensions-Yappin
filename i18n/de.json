@@ -1,7 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
-            "Kingcat100",
+            "Kingcat",
 			"Magiczocker"
 		]
 	},
@@ -20,7 +20,7 @@
 	"yappin-sort-newest": "Neuste",
 	"yappin-sort-oldest": "Älteste",
 	"yappin-sort-highest-rated": "Höchste Bewertung",
-	"yappin-sort-lowest-rated": "Niedrichste Bewertung",
+	"yappin-sort-lowest-rated": "Niedrigste Bewertung",
 	"yappin-post-placeholder-top-level": "Kommentar hinzufügen",
 	"yappin-post-placeholder-child": "Antworten",
 	"yappin-post-submit-top-level": "Absenden",
