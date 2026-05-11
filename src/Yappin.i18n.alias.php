@@ -11,3 +11,8 @@ $specialPageAliases[ 'en' ] = [
 $specialPageAliases[ 'de' ] = [
 	'Comments' => [ 'Kommentare' ]
 ];
+
+/** Russian (Русский) */
+$specialPageAliases[ 'ru' ] = [
+	'Comments' => [ 'Комментарии' ]
+];
