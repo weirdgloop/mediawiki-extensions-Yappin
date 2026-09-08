@@ -128,7 +128,7 @@ const registries = require( './registries.js' );
 
 	mw.commentsExt.ve.Target.prototype.setDir = function () {
 		const view = this.surface.getView(),
-			dir = $( 'body' ).is( '.rtl' ) ? 'rtl' : 'ltr';
+			dir = $( document.body ).is( '.rtl' ) ? 'rtl' : 'ltr';
 		if ( view ) {
 			view.getDocument().setDir( dir );
 		}
