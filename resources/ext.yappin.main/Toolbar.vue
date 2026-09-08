@@ -22,23 +22,19 @@
 
 <script>
 const { defineComponent } = require( 'vue' );
-const { CdxSelect, CdxField, CdxButton, CdxIcon } = require( './codex.js' );
+const { CdxSelect, CdxField } = require( './codex.js' );
 const store = require( './store.js' );
-const { cdxIconSpeechBubbleAdd } = require( './icons.json' );
 const { SORT_OPTIONS } = require( './util.js' );
 
 module.exports = exports = defineComponent( {
 	name: 'Toolbar',
 	components: {
 		CdxSelect,
-		CdxField,
-		CdxButton,
-		CdxIcon
+		CdxField
 	},
 	setup() {
 		return {
-			SORT_OPTIONS,
-			cdxIconSpeechBubbleAdd
+			SORT_OPTIONS
 		};
 	},
 	data() {
