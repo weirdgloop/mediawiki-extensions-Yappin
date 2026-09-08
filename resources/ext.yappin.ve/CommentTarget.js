@@ -7,8 +7,8 @@ const registries = require( './registries.js' );
 	/**
 	 * Inherits from the standard VE target.
 	 *
-	 * @param node
-	 * @param html
+	 * @param {jQuery} node
+	 * @param {jQuery} html
 	 * @class
 	 * @extends ve.init.mw.Target
 	 */
