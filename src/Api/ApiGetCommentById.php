@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\Yappin\Api;
 
 use InvalidArgumentException;
+use LogicException;
 use MediaWiki\Extension\Yappin\CommentFactory;
 use MediaWiki\Extension\Yappin\CommentsPager;
 use MediaWiki\Extension\Yappin\Models\Comment;
@@ -93,6 +94,9 @@ class ApiGetCommentById extends SimpleHandler {
 			} else {
 				$parent = $data;
 			}
+		}
+		if ( !is_array( $parent ) ) {
+			throw new LogicException( 'Expected $parent to be an array!' );
 		}
 
 		return $this->getResponseFactory()->createJson( [
