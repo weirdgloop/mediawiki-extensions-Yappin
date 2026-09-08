@@ -428,7 +428,7 @@ class CommentsPager {
 		$parentSelect = $this->db->newSelectQueryBuilder()
 			->select( 'c.*' )
 			->from( Comment::TABLE_NAME, 'c' )
-			->where( [ 'c_id' => $parentId ] + $conds );
+			->where( array_merge( [ 'c_id' => $parentId ], $conds ) );
 
 		$this->addPageJoin( $parentSelect );
 		$this->addUserRatingJoin( $parentSelect );
