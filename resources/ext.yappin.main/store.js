@@ -5,13 +5,13 @@ const isSpecialComments = !!document.querySelector( 'body.mw-special-Comments' )
 
 const SORT_METHOD_STORAGE_KEY = 'ext-comments-comments-sort';
 let initialSortMethod = 'sort_rating_desc';
-const savedSortMethod = window.localStorage.getItem( SORT_METHOD_STORAGE_KEY );
+const savedSortMethod = mw.storage.get( SORT_METHOD_STORAGE_KEY );
 if ( savedSortMethod &&
 	Object.values( SORT_OPTIONS ).map( ( v ) => v.value ).includes( savedSortMethod ) ) {
 	initialSortMethod = savedSortMethod;
 } else {
 	// Invalid sort method saved, remove it from the browser storage
-	window.localStorage.removeItem( SORT_METHOD_STORAGE_KEY );
+	mw.storage.remove( SORT_METHOD_STORAGE_KEY );
 }
 
 const store = reactive( {
@@ -34,7 +34,7 @@ const store = reactive( {
 	filterByUser: null,
 	setSortMethod: ( method ) => {
 		this.sortMethod = method;
-		window.localStorage.setItem( SORT_METHOD_STORAGE_KEY, this.sortMethod );
+		mw.storage.set( SORT_METHOD_STORAGE_KEY, this.sortMethod );
 	}
 } );
 
