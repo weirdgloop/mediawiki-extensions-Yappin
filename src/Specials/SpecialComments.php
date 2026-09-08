@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\Yappin\Specials;
 
 use MediaWiki\Extension\Yappin\Utils;
+use MediaWiki\Html\Html;
 use MediaWiki\SpecialPage\SpecialPage;
 
 /**
@@ -30,7 +31,7 @@ class SpecialComments extends SpecialPage {
 
 		Utils::loadCommentsModule( $out );
 		$out->addHTML(
-			'<noscript>' . $out->msg( 'yappin-no-script' )->text() . '</noscript>'
+			Html::element( 'noscript', [], $this->msg( 'yappin-no-script' )->text() )
 		);
 	}
 
