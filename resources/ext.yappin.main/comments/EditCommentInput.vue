@@ -108,7 +108,7 @@ module.exports = exports = defineComponent( {
 
 		if ( canUseVe ) {
 			// Create the VE instance for this editor
-			this.$data.ve = new mw.commentsExt.ve.Editor( $input, this.$props.comment.html );
+			this.$data.ve = new mw.commentsExt.ve.Editor( $input );
 		}
 	}
 } );

@@ -5,11 +5,8 @@
 	 * @class
 	 * @constructor
 	 * @param {jQuery} $node Node to replace with a VisualEditor
-	 * @param {string} [content='']
 	 */
-	mw.commentsExt.ve.Editor = function ( $node, content ) {
-		let modules;
-
+	mw.commentsExt.ve.Editor = function ( $node ) {
 		OO.EventEmitter.call( this );
 		this.$node = $( $node );
 
@@ -21,10 +18,10 @@
 			.addClass( 'oo-ui-texture-pending' );
 
 		// The main module should already be loaded.
-		modules = mw.config.get( 'wgVisualEditorConfig' ).pluginModules.filter( mw.loader.getState );
+		const modules = mw.config.get( 'wgVisualEditorConfig' ).pluginModules.filter( mw.loader.getState );
 
 		// load dependencies & init editor
-		mw.loader.using( modules, this.init.bind( this, content || '' ) );
+		mw.loader.using( modules, this.init.bind( this ) );
 	};
 
 	OO.mixinClass( mw.commentsExt.ve.Editor, OO.EventEmitter );
@@ -64,10 +61,8 @@
 
 	/**
 	 * Callback function, executed after all VE dependencies have been loaded.
-	 *
-	 * @param {string} [content='']
 	 */
-	mw.commentsExt.ve.Editor.prototype.init = function ( content ) {
+	mw.commentsExt.ve.Editor.prototype.init = function () {
 		this.target = this.createTarget();
 
 		$.each( this.initCallbacks, ( k, callback ) => {

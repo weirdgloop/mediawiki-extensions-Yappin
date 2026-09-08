@@ -134,7 +134,7 @@ module.exports = exports = defineComponent( {
 			const $input = $( this.$refs.input );
 			if ( val === true && this.$data.ve === null && mw.commentsExt.ve.Editor.static.isSupported() ) {
 				// Create the VE instance for this editor
-				this.$data.ve = new mw.commentsExt.ve.Editor( $input, $input.val() );
+				this.$data.ve = new mw.commentsExt.ve.Editor( $input );
 			} else if ( val === true ) {
 				if ( this.$data.ve ) {
 					this.$data.ve.target.getSurface().getView().focus();
