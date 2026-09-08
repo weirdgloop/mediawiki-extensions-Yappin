@@ -40,13 +40,13 @@ class Comment {
 	/** @var Comment|null */
 	private $mParent = null;
 
-	/** @var int */
+	/** @var int|null */
 	public $mParentId;
 
-	/** @var UserIdentity */
+	/** @var UserIdentity|null */
 	public $mDeletedActor = null;
 
-	/** @var int */
+	/** @var int|null */
 	public $mDeletedActorId = null;
 
 	/** @var int */
@@ -341,7 +341,7 @@ class Comment {
 	 *
 	 * This method returns the current Comment object for easier chaining.
 	 *
-	 * @param number $rating
+	 * @param int $rating
 	 * @return self
 	 */
 	public function setRating( $rating ) {

@@ -189,7 +189,7 @@ class CommentsPager {
 	 * Fetches the comments for a particular page by its ID.
 	 * @param int $pageId
 	 * @param bool $includeChildren
-	 * @return stdClass[]
+	 * @return array{c: Comment, ur: int, ours: bool, p: ?array{title: string, ns: int, id: int}, num_children: int}[]
 	 */
 	public function fetchResultsForPage( $pageId, $includeChildren ) {
 		$conds = [
@@ -294,7 +294,7 @@ class CommentsPager {
 
 	/**
 	 * @param SelectQueryBuilder|UnionQueryBuilder $builder
-	 * @return stdClass[]
+	 * @return array{c: Comment, ur: int, ours: bool, p: ?array{title: string, ns: int, id: int}, num_children: int}[]
 	 */
 	private function reallyFetchResultsForPage( $builder ) {
 		$res = $builder->fetchResultSet();
@@ -329,7 +329,7 @@ class CommentsPager {
 
 	/**
 	 * Fetches all of the comments posted on the wiki.
-	 * @return stdClass[]
+	 * @return array{c: Comment, ur: int, ours: bool, p: ?array{title: string, ns: int, id: int}, num_children: int}[]
 	 */
 	public function fetchAllResults() {
 		$conds = [];
@@ -401,7 +401,7 @@ class CommentsPager {
 	/**
 	 * Fetches the target parent ID's row, and the children of the target parent comment ID.
 	 * @param int $parentId
-	 * @return stdClass[]
+	 * @return array{c: Comment, ur: int, ours: bool, p: ?array{title: string, ns: int, id: int}, num_children: int}[]
 	 */
 	public function fetchResultsForParent( $parentId ) {
 		$conds = [];
@@ -449,7 +449,7 @@ class CommentsPager {
 	/**
 	 * @param Comment $comment
 	 * @param stdClass $row
-	 * @return stdClass[]
+	 * @return array{c: Comment, ur: int, ours: bool, p: ?array{title: string, ns: int, id: int}, num_children: int}
 	 */
 	private function formatResult( $comment, $row ) {
 		return [

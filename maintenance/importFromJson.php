@@ -6,6 +6,7 @@ use MediaWiki\Page\PageReferenceValue;
 use MediaWiki\Parser\Parsoid\ParsoidParserFactory;
 use MediaWiki\User\ActorNormalization;
 use MediaWiki\User\UserFactory;
+use Wikimedia\Rdbms\IDatabase;
 
 class ImportFromJson extends Maintenance {
 	public const REQUIRED_KEYS = [
@@ -89,7 +90,7 @@ class ImportFromJson extends Maintenance {
 
 	/**
 	 * @param array $data
-	 * @param IMaintainableDatabase $dbw
+	 * @param IDatabase $dbw
 	 * @param ParsoidParserFactory $pf
 	 * @param ActorNormalization $an
 	 * @param UserFactory $uf
