@@ -4,6 +4,7 @@
 		"stylelint-config-wikimedia/mediawiki"
 	],
 	"rules": {
-		"selector-class-pattern": "^(comments|mw)-"
+		"selector-class-pattern": "^((comments?|ext-comments|rating|mw|cdx|ve|oo-ui)-|is-highlighted)",
+		"no-descending-specificity": null
 	}
 }

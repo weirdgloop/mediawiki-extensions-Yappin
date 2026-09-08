@@ -11,6 +11,7 @@
 	--comments-muted: var( --color-subtle, #757575 );
 }
 
+/* stylelint-disable-next-line selector-max-id */
 #ext-comments-container {
 	button {
 		cursor: pointer;
@@ -40,7 +41,7 @@
 		margin-left: 0.5em;
 
 		button,
- a {
+		a {
 			font-weight: 200;
 			font-size: 0.8em;
 			background: none;
@@ -63,10 +64,6 @@
 				text-decoration: unset;
 			}
 		}
-	}
-
-	.comment-input-container {
-		margin-bottom: 0.5em;
 	}
 
 	.ext-comments-comments-list {
@@ -132,6 +129,7 @@
 
 		.comment-content {
 			img {
+				/* stylelint-disable-next-line declaration-no-important */
 				max-width: 50% !important;
 				height: auto;
 			}
@@ -150,7 +148,7 @@
 
 		.comment-action-btn {
 			background: none;
-			border: none;
+			border: 0;
 			padding: 0.1em;
 
 			.cdx-icon {
@@ -188,7 +186,7 @@
 
 		button {
 			background: none;
-			border: none;
+			border: 0;
 
 			.cdx-icon {
 				color: var( --comments-muted );
@@ -243,6 +241,8 @@
 	}
 
 	.comment-input-container {
+		margin-bottom: 0.5em;
+
 		textarea {
 			width: 100%;
 			resize: none;
