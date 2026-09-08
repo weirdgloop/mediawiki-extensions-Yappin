@@ -75,7 +75,7 @@ class GeneralHookHandlers implements
 
 		$tools['commentcontribs'] = MediaWikiServices::getInstance()->getLinkRenderer()->makeKnownLink(
 			SpecialPage::getTitleFor( 'Comments' ),
-			$specialPage->msg( 'yappin-contributions', $username ),
+			$specialPage->msg( 'yappin-contributions', $username )->text(),
 			[],
 			[ 'user' => $username ]
 		);
