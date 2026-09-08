@@ -29,7 +29,7 @@
 	mw.commentsExt.ve.Editor.prototype.initCallbacks = [];
 
 	mw.commentsExt.ve.Editor.prototype.createTarget = function () {
-		let self = this, $wrapperNode, maxHeight;
+		const self = this;
 
 		this.target = new mw.commentsExt.ve.Target( this.$node, $( this.$node ).val() );
 
@@ -48,8 +48,8 @@
 			} );
 
 			// Set max height of the textarea, if it was specified.
-			$wrapperNode = self.$node.parent( '.ve-area-wrapper' );
-			maxHeight = $wrapperNode.attr( 'data-max-height' );
+			const $wrapperNode = self.$node.parent( '.ve-area-wrapper' );
+			const maxHeight = $wrapperNode.attr( 'data-max-height' );
 			if ( maxHeight !== undefined ) {
 				$wrapperNode.find( '.ve-ce-documentNode' ).css( 'max-height', maxHeight )
 					.css( 'overflow-y', 'auto' );
@@ -85,19 +85,16 @@
 	 * @return {string}
 	 */
 	mw.commentsExt.ve.Editor.prototype.getRawContent = function () {
-		let doc, html;
-
 		// If we haven't fully loaded yet, just return nothing.
 		if ( !this.target ) {
 			return '';
 		}
 
 		// get document from ve
-		doc = ve.dm.converter.getDomFromModel( this.dmDoc );
+		const doc = ve.dm.converter.getDomFromModel( this.dmDoc );
 
 		// document content will include html, head & body nodes; get only content inside body node
-		html = ve.properInnerHtml( $( doc.documentElement ).find( 'body' )[ 0 ] );
-		return html;
+		return ve.properInnerHtml( $( doc.documentElement ).find( 'body' )[ 0 ] );
 	};
 
 	/**
@@ -126,8 +123,6 @@
 	};
 
 	mw.commentsExt.ve.Editor.prototype.moveCursorToEnd = function () {
-		let data, cursorPos;
-
 		if ( !this.target ) {
 			this.initCallbacks.push( function () {
 				this.moveCursorToEnd();
@@ -135,8 +130,8 @@
 			return;
 		}
 
-		data = this.target.surface.getModel().getDocument().data;
-		cursorPos = data.getNearestContentOffset( data.getLength(), -1 );
+		const data = this.target.surface.getModel().getDocument().data;
+		const cursorPos = data.getNearestContentOffset( data.getLength(), -1 );
 
 		this.target.surface.getModel().setSelection( new ve.Range( cursorPos ) );
 	};
