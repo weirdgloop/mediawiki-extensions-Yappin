@@ -65,7 +65,7 @@
 	mw.commentsExt.ve.Editor.prototype.init = function () {
 		this.target = this.createTarget();
 
-		$.each( this.initCallbacks, ( k, callback ) => {
+		this.initCallbacks.forEach( ( callback ) => {
 			callback.apply( this );
 		} );
 	};
