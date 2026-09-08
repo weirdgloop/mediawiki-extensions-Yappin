@@ -1,0 +1,9 @@
+{
+	"extends": [
+		"stylelint-config-wikimedia/support-basic",
+		"stylelint-config-wikimedia/mediawiki"
+	],
+	"rules": {
+		"selector-class-pattern": "^(comments|mw)-"
+	}
+}

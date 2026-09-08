@@ -13,7 +13,7 @@ const registries = require( './registries.js' );
 	 * @extends ve.init.mw.Target
 	 */
 	mw.commentsExt.ve.Target = function ( node, html ) {
-		var config = {};
+		const config = {};
 		config.toolbarConfig = {};
 		config.toolbarConfig.actions = true;
 
@@ -62,7 +62,7 @@ const registries = require( './registries.js' );
 	 * @param {string} content text to initiate content, in html format
 	 */
 	mw.commentsExt.ve.Target.prototype.createWithHtmlContent = function ( content ) {
-		var target = this;
+		const target = this;
 
 		this.addSurface(
 			ve.dm.converter.getModelFromDom(
@@ -77,7 +77,7 @@ const registries = require( './registries.js' );
 
 		this.setDir();
 
-		target.once( 'surfaceReady', function () {
+		target.once( 'surfaceReady', () => {
 			// Focus the VE surface when it is ready
 			target.getSurface().getView().focus();
 		} );
@@ -94,7 +94,7 @@ const registries = require( './registries.js' );
 	};
 
 	mw.commentsExt.ve.Target.prototype.escapePipesInTables = function ( text ) {
-		var lines = text.split( '\n' ), i, curLine, withinTable = false;
+		let lines = text.split( '\n' ), i, curLine, withinTable = false;
 
 		// This algorithm will hopefully work for all cases except
 		// when there are template calls within the table, and those
@@ -112,11 +112,11 @@ const registries = require( './registries.js' );
 				lines[ i ] = curLine.replace( /\|/g, '{{!}}' );
 			}
 			// Table caption case (`|+`). See https://www.mediawiki.org/wiki/Help:Tables
-			if ( withinTable && curLine.indexOf( '|+' ) > -1 ) {
+			if ( withinTable && curLine.includes( '|+' ) ) {
 				lines[ i ] = curLine.replace( /\|\+/g, '{{!}}+' );
 			}
 			// colspan/rowspan case (`|rowspan=`/`|colspan=`). See https://www.mediawiki.org/wiki/Help:Tables
-			if ( withinTable && ( curLine.indexOf( 'colspan' ) > -1 || curLine.indexOf( 'rowspan' ) > -1 ) ) {
+			if ( withinTable && ( curLine.includes( 'colspan' ) || curLine.includes( 'rowspan' ) ) ) {
 				lines[ i ] = curLine.replace( /(colspan|rowspan)="(\d+?)"\s{0,}\|/, '$1="$2" {{!}}' ).replace( /^\s{0,}\|/, '{{!}} ' );
 			}
 			if ( curLine.indexOf( '|}' ) === 0 ) {
@@ -127,7 +127,7 @@ const registries = require( './registries.js' );
 	};
 
 	mw.commentsExt.ve.Target.prototype.setDir = function () {
-		var view = this.surface.getView(),
+		const view = this.surface.getView(),
 			dir = $( 'body' ).is( '.rtl' ) ? 'rtl' : 'ltr';
 		if ( view ) {
 			view.getDocument().setDir( dir );
@@ -138,8 +138,8 @@ const registries = require( './registries.js' );
 		return mw.commentsExt.ve.Target.super.prototype.getSurfaceConfig.call( this, ve.extendObject( {
 			sequenceRegistry: registries.sequenceRegistry,
 			commandRegistry: registries.commandRegistry
-		}, config ) )
-	}
+		}, config ) );
+	};
 
 	ve.init.mw.targetFactory.register( mw.commentsExt.ve.Target );
 

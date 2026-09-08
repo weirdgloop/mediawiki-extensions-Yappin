@@ -1,15 +1,15 @@
 <template>
 	<div class="comment-list-toolbar">
-		<h3 :style="{ 'visibility': store.isSpecialComments ? 'hidden' : null }">
-			{{ $i18n( 'yappin-container-header' ).text()  }}
+		<h3 :style="{ visibility: store.isSpecialComments ? 'hidden' : null }">
+			{{ $i18n( 'yappin-container-header' ).text() }}
 		</h3>
 		<div class="comment-list-options">
 			<div class="comment-list-option-sort-method">
 				<cdx-field>
 					<cdx-select
 						v-model:selected="store.sortMethod"
-						v-on:update:selected="store.setSortMethod"
 						:menu-items="SORT_OPTIONS"
+						@update:selected="store.setSortMethod"
 					></cdx-select>
 					<template #label>
 						{{ $i18n( 'yappin-sort-label' ).text() }}
@@ -35,15 +35,15 @@ module.exports = exports = defineComponent( {
 		CdxButton,
 		CdxIcon
 	},
-	data() {
-		return {
-			store,
-		};
-	},
 	setup() {
 		return {
 			SORT_OPTIONS,
-			cdxIconSpeechBubbleAdd,
+			cdxIconSpeechBubbleAdd
+		};
+	},
+	data() {
+		return {
+			store
 		};
 	}
 } );

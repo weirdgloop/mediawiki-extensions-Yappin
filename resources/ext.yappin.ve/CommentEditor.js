@@ -8,7 +8,7 @@
 	 * @param {string} [content='']
 	 */
 	mw.commentsExt.ve.Editor = function ( $node, content ) {
-		var modules;
+		let modules;
 
 		OO.EventEmitter.call( this );
 		this.$node = $( $node );
@@ -32,21 +32,21 @@
 	mw.commentsExt.ve.Editor.prototype.initCallbacks = [];
 
 	mw.commentsExt.ve.Editor.prototype.createTarget = function () {
-		var self = this, $wrapperNode, maxHeight;
+		let self = this, $wrapperNode, maxHeight;
 
 		this.target = new mw.commentsExt.ve.Target( this.$node, $( this.$node ).val() );
 
 		// Various tasks to do once VE has finished being applied.
-		self.target.on( 'editor-ready', function () {
+		self.target.on( 'editor-ready', () => {
 			// Catch keyup events on surface to comply with
 			// saveAndContinue button state and changes warning.
-			self.target.getSurface().getView().on( 'keyup', function () {
+			self.target.getSurface().getView().on( 'keyup', () => {
 				self.$node.trigger( 'change' );
 			} );
 
 			// Catch keyup events on raw textarea to use changes
 			// warning on page reload.
-			self.target.$node.on( 'keyup', function () {
+			self.target.$node.on( 'keyup', () => {
 				self.$node.trigger( 'change' );
 			} );
 
@@ -70,9 +70,9 @@
 	mw.commentsExt.ve.Editor.prototype.init = function ( content ) {
 		this.target = this.createTarget();
 
-		$.each( this.initCallbacks, function ( k, callback ) {
+		$.each( this.initCallbacks, ( k, callback ) => {
 			callback.apply( this );
-		}.bind( this ) );
+		} );
 	};
 
 	mw.commentsExt.ve.Editor.prototype.destroy = function () {
@@ -90,7 +90,7 @@
 	 * @return {string}
 	 */
 	mw.commentsExt.ve.Editor.prototype.getRawContent = function () {
-		var doc, html;
+		let doc, html;
 
 		// If we haven't fully loaded yet, just return nothing.
 		if ( !this.target ) {
@@ -131,7 +131,7 @@
 	};
 
 	mw.commentsExt.ve.Editor.prototype.moveCursorToEnd = function () {
-		var data, cursorPos;
+		let data, cursorPos;
 
 		if ( !this.target ) {
 			this.initCallbacks.push( function () {
@@ -165,7 +165,7 @@
 	// Static methods
 
 	mw.commentsExt.ve.Editor.static.isSupported = function () {
-		var isMobileTarget = ( mw.config.get( 'skin' ) === 'minerva' );
+		const isMobileTarget = ( mw.config.get( 'skin' ) === 'minerva' );
 
 		/* global VisualEditorSupportCheck */
 		return !!(

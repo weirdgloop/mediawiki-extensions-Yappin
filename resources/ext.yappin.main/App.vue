@@ -1,9 +1,9 @@
 <template>
 	<toolbar></toolbar>
 	<button
-		class="comment-input-placeholder"
 		v-if="!store.isSpecialComments"
 		v-show="!isWritingTopLevelComment"
+		class="comment-input-placeholder"
 		@click="isWritingTopLevelComment = true"
 	>
 		<span>{{ $i18n( 'yappin-post-placeholder-top-level' ).text() }}</span>
@@ -26,12 +26,6 @@ const Toolbar = require( './Toolbar.vue' );
 
 module.exports = exports = defineComponent( {
 	name: 'App',
-	data() {
-		return {
-			store,
-			isWritingTopLevelComment: false
-		};
-	},
 	components: {
 		NewCommentInput,
 		Toolbar,
@@ -39,15 +33,21 @@ module.exports = exports = defineComponent( {
 		CdxSelect,
 		CdxField
 	},
+	data() {
+		return {
+			store,
+			isWritingTopLevelComment: false
+		};
+	},
 	mounted() {
 		const self = this;
 		// When the app first loads, determine whether we should be displaying the comments in a read-only form
-		let readOnly = mw.config.get( 'wgComments' ).readOnly;
+		const readOnly = mw.config.get( 'wgComments' ).readOnly;
 
 		const params = new URLSearchParams( window.location.search );
 
 		// Determine whether we should only be showing a single comment
-		let singleCommentId = params.get( 'comment' );
+		const singleCommentId = params.get( 'comment' );
 		if ( singleCommentId ) {
 			this.$data.store.singleComment = singleCommentId;
 		}
@@ -56,7 +56,7 @@ module.exports = exports = defineComponent( {
 		let targetUser = params.get( 'user' );
 		if ( targetUser ) {
 			targetUser = targetUser.trim();
-			this.$data.store.filterByUser = targetUser.charAt(0).toUpperCase() + targetUser.substring(1);
+			this.$data.store.filterByUser = targetUser.charAt( 0 ).toUpperCase() + targetUser.slice( 1 );
 		}
 
 		this.$data.store.isReadOnly = readOnly;
@@ -65,11 +65,11 @@ module.exports = exports = defineComponent( {
 			if ( self.$data.store.globalCooldown > 0 ) {
 				self.$data.store.globalCooldown -= 1;
 			}
-		}, 1000 )
+		}, 1000 );
 
 		Vue.nextTick( () => {
 			this.$data.store.ready = true;
-		} )
+		} );
 	}
 } );
 </script>

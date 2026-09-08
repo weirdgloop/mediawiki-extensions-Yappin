@@ -1,22 +1,19 @@
 {
 	"private": true,
 	"scripts": {
-		"lint": "npm -s run lint:js && npm -s run lint:i18n",
-		"lint:fix:js": "npm -s run lint:js -- --fix",
-		"lint:fix:styles": "npm -s run lint:styles -- --fix",
-		"lint:js": "eslint --cache --max-warnings 0 .",
-		"lint:styles": "stylelint \"**/*.{less,css}\"",
-		"lint:i18n": "banana-checker --requireLowerCase=0 i18n/"
+		"test": "grunt test"
 	},
 	"devDependencies": {
 		"@wikimedia/codex": "^1.8.0",
 		"@wikimedia/types-wikimedia": "0.4.4",
-		"eslint-config-wikimedia": "0.28.2",
-		"eslint-plugin-no-jquery": "3.0.2",
+		"eslint-config-wikimedia": "0.32.5",
+		"grunt": "1.6.3",
 		"grunt-banana-checker": "0.13.0",
+		"grunt-eslint": "24.3.0",
+		"grunt-stylelint": "0.21.0",
+		"stylelint-config-wikimedia": "0.19.3",
+		"eslint-plugin-no-jquery": "6.0.0",
 		"oojs": "^7.0.1",
-		"oojs-ui": "^0.50.3",
-		"stylelint-config-idiomatic-order": "10.0.0",
-		"stylelint-config-wikimedia": "0.17.2"
+		"oojs-ui": "^0.50.3"
 	}
 }

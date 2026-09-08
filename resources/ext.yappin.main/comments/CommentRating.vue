@@ -4,9 +4,9 @@
 			class="comment-rating-btn"
 			:title="$i18n( 'yappin-rating-upvote' )"
 			data-type="upvote"
-			:value="this.$props.comment.userRating === 1"
-			@click="onButtonClick"
+			:value="$props.comment.userRating === 1"
 			:disabled="waiting"
+			@click="onButtonClick"
 		>
 			<cdx-icon
 				:icon="cdxIconUpTriangle"
@@ -17,9 +17,9 @@
 			class="comment-rating-btn"
 			:title="$i18n( 'yappin-rating-downvote' )"
 			data-type="downvote"
-			:value="this.$props.comment.userRating === -1"
-			@click="onButtonClick"
+			:value="$props.comment.userRating === -1"
 			:disabled="waiting"
+			@click="onButtonClick"
 		>
 			<cdx-icon
 				:icon="cdxIconDownTriangle"
@@ -54,11 +54,17 @@ module.exports = exports = defineComponent( {
 			required: true
 		}
 	},
+	setup() {
+		return {
+			cdxIconUpTriangle,
+			cdxIconDownTriangle
+		};
+	},
 	data() {
 		return {
 			store,
 			waiting: false
-		}
+		};
 	},
 	methods: {
 		onButtonClick( e ) {
@@ -76,7 +82,7 @@ module.exports = exports = defineComponent( {
 			const oldValue = this.$props.comment.userRating;
 			this.$props.comment.userRating = newValue;
 
-			api.post( `/comments/v0/comment/${this.$props.comment.id}/vote`, {
+			api.post( `/comments/v0/comment/${ this.$props.comment.id }/vote`, {
 				rating: newValue
 			} ).then( ( data ) => {
 				this.$props.comment.rating = data.comment.rating;
@@ -84,7 +90,7 @@ module.exports = exports = defineComponent( {
 				this.$data.waiting = false;
 			} ).fail( ( _, result ) => {
 				// Reset the UI state back to the previous value if the API call failed
-				this.$props.comment.userRating = oldValue
+				this.$props.comment.userRating = oldValue;
 
 				if ( result.xhr.responseJSON && Object.prototype.hasOwnProperty.call(
 					result.xhr.responseJSON, 'messageTranslations' ) ) {
@@ -96,20 +102,14 @@ module.exports = exports = defineComponent( {
 					if ( config.wgContentLanguage in result.xhr.responseJSON.messageTranslations ) {
 						error = result.xhr.responseJSON.messageTranslations[ config.wgContentLanguage ];
 					} else {
-						error = result.xhr.responseJSON.messageTranslations.en
+						error = result.xhr.responseJSON.messageTranslations.en;
 					}
 				} else {
 					error = mw.Message( 'unknown-error' );
 				}
 				mw.notify( error, { type: 'error', tag: 'vote-comment-error' } );
-			} )
+			} );
 		}
-	},
-	setup() {
-		return {
-			cdxIconUpTriangle,
-			cdxIconDownTriangle
-		};
 	}
 } );
 </script>

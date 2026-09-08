@@ -5,9 +5,9 @@ const isSpecialComments = !!document.querySelector( 'body.mw-special-Comments' )
 
 const SORT_METHOD_STORAGE_KEY = 'ext-comments-comments-sort';
 let initialSortMethod = 'sort_rating_desc';
-let savedSortMethod = window.localStorage.getItem( SORT_METHOD_STORAGE_KEY );
+const savedSortMethod = window.localStorage.getItem( SORT_METHOD_STORAGE_KEY );
 if ( savedSortMethod &&
-	Object.values( SORT_OPTIONS ).map( v => v.value ).includes( savedSortMethod ) ) {
+	Object.values( SORT_OPTIONS ).map( ( v ) => v.value ).includes( savedSortMethod ) ) {
 	initialSortMethod = savedSortMethod;
 } else {
 	// Invalid sort method saved, remove it from the browser storage
@@ -32,10 +32,10 @@ const store = reactive( {
 	singleComment: null,
 	// Whether to filter the comments displayed by a specific user
 	filterByUser: null,
-	setSortMethod: (method) => {
+	setSortMethod: ( method ) => {
 		this.sortMethod = method;
 		window.localStorage.setItem( SORT_METHOD_STORAGE_KEY, this.sortMethod );
 	}
-} )
+} );
 
 module.exports = store;

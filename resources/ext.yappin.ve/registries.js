@@ -7,13 +7,13 @@
 
 // Adapted from ve.ui.MWWikitextDataTransferHandlerFactory
 function importRegistry( parent, child ) {
-	var name;
+	let name;
 	// Copy existing items
 	for ( name in parent.registry ) {
 		child.register( parent.registry[ name ] );
 	}
 	// Copy any new items when they're added
-	parent.on( 'register', function ( n, data ) {
+	parent.on( 'register', ( n, data ) => {
 		child.register( data );
 	} );
 }
@@ -36,4 +36,4 @@ commandRegistry.register( new mw.commentsExt.ve.MWWikitextWarningCommand() );
 module.exports = {
 	sequenceRegistry,
 	commandRegistry
-}
+};

@@ -18,18 +18,18 @@
 	 * @inheritDoc
 	 */
 	mw.commentsExt.ve.MWWikitextWarningCommand.prototype.execute = function () {
-		var command = this;
+		const command = this;
 		if ( this.warning && this.warning.isOpen ) {
 			return false;
 		}
-		// eslint-disable-next-line no-jquery/no-html
-		var $message = $( '<div>' ).html( ve.init.platform.getParsedMessage( 'yappin-visualeditor-wikitext-warning' ) );
+
+		const $message = $( '<div>' ).html( ve.init.platform.getParsedMessage( 'yappin-visualeditor-wikitext-warning' ) );
 		ve.targetLinksToNewWindow( $message[ 0 ] );
 		ve.init.platform.notify(
 			$message.contents(),
 			ve.msg( 'visualeditor-wikitext-warning-title' ),
 			{ tag: 'yappin-visualeditor-wikitext-warning' }
-		).then( function ( message ) {
+		).then( ( message ) => {
 			command.warning = message;
 		} );
 		return true;
