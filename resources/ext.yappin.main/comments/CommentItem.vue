@@ -57,9 +57,7 @@
 							class="comment-action-delete"
 							:icon="comment.deleted ? cdxIconRestore : cdxIconTrash"
 							:on-click="deleteComment"
-							:title="$i18n(
-								comment.deleted ? 'yappin-action-label-undelete' : 'yappin-action-label-delete'
-							).text()"
+							:title="deleteActionLabel"
 						></comment-action>
 						<comment-action
 							v-if="!comment.deleted"
@@ -211,6 +209,12 @@ module.exports = exports = defineComponent( {
 			const url = new URL( this.targetPage ? this.targetPage.getUrl() : document.location, config.wgServer );
 			url.searchParams.set( 'comment', this.comment.id );
 			return url;
+		},
+		deleteActionLabel() {
+			const key = this.comment.deleted ?
+				'yappin-action-label-undelete' :
+				'yappin-action-label-delete';
+			return mw.message( key ).text();
 		}
 	},
 	methods: {
