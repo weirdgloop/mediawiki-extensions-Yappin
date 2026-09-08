@@ -22,6 +22,7 @@ const store = require( './store.js' );
 const NewCommentInput = require( './comments/NewCommentInput.vue' );
 const CommentsList = require( './CommentsList.vue' );
 const Toolbar = require( './Toolbar.vue' );
+const Vue = require( 'vue' );
 
 module.exports = exports = defineComponent( {
 	name: 'App',

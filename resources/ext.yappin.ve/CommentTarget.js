@@ -94,7 +94,8 @@ const registries = require( './registries.js' );
 	};
 
 	mw.commentsExt.ve.Target.prototype.escapePipesInTables = function ( text ) {
-		let lines = text.split( '\n' ), i, curLine, withinTable = false;
+		const lines = text.split( '\n' );
+		let i, curLine, withinTable = false;
 
 		// This algorithm will hopefully work for all cases except
 		// when there are template calls within the table, and those

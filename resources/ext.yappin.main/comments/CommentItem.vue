@@ -240,6 +240,7 @@ module.exports = exports = defineComponent( {
 			} );
 		},
 		linkComment() {
+			// eslint-disable-next-line compat/compat
 			navigator.clipboard.writeText( this.singleCommentLink.href );
 			mw.notify( mw.msg( 'yappin-action-link-copied' ), { tag: 'copy-comment' } );
 		}

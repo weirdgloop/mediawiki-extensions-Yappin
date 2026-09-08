@@ -27,6 +27,7 @@ const store = require( './store.js' );
 const { SORT_OPTIONS } = require( './util.js' );
 
 module.exports = exports = defineComponent( {
+	// eslint-disable-next-line vue/multi-word-component-names
 	name: 'Toolbar',
 	components: {
 		CdxSelect,
