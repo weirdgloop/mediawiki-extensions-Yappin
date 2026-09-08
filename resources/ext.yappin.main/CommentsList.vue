@@ -174,8 +174,8 @@ module.exports = exports = defineComponent( {
 		checkVisible() {
 			// If URL params specify a comment we want to see, then always load comment list
 			const shouldLoad = isElementInView( this.$el ) || this.store.singleComment;
-			if ( shouldLoad && this.$data.store.ready && !this.$data.elementSeen ) {
-				this.$data.elementSeen = true;
+			if ( shouldLoad && this.$data.store.ready && !this.elementSeen ) {
+				this.elementSeen = true;
 				this.loadComments();
 			}
 		}

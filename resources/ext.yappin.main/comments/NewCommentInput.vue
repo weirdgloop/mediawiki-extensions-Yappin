@@ -79,10 +79,10 @@ module.exports = exports = defineComponent( {
 				body.pageid = config.wgArticleId;
 			}
 
-			if ( this.$data.ve ) {
+			if ( this.ve ) {
 				// We're going to pass the raw HTML from VE to our API. However, the API will parse it using Parsoid
 				// which will sanitize it before saving it in the database.
-				body.html = this.$data.ve.target.getSurface().getHtml();
+				body.html = this.ve.target.getSurface().getHtml();
 			} else {
 				// If we're not using VE, just send the raw value of the input as wikitext.
 				body.wikitext = $( this.$refs.input ).val();
@@ -100,11 +100,11 @@ module.exports = exports = defineComponent( {
 
 				if ( this.$props.parentId ) {
 					// Reply to an existing comment, add it to the end of the children list
-					const ix = this.$data.store.comments.findIndex( ( c ) => c.id === this.$props.parentId );
-					this.$data.store.comments[ ix ].children.push( newComment );
+					const ix = this.store.comments.findIndex( ( c ) => c.id === this.$props.parentId );
+					this.store.comments[ ix ].children.push( newComment );
 				} else {
 					// Top-level comment, just throw it to the top of the comments list
-					this.$data.store.comments.unshift( newComment );
+					this.store.comments.unshift( newComment );
 				}
 
 				this.$props.onCancel();
@@ -114,7 +114,7 @@ module.exports = exports = defineComponent( {
 					result.xhr.responseJSON, 'messageTranslations' ) ) {
 					if ( result.xhr.responseJSON.errorKey === 'yappin-submit-error-spam' ) {
 						// If the comment was rejected for spam/abuse, add a small cooldown
-						this.$data.store.globalCooldown = 10;
+						this.store.globalCooldown = 10;
 					}
 
 					if ( config.wgContentLanguage in result.xhr.responseJSON.messageTranslations ) {
@@ -132,20 +132,20 @@ module.exports = exports = defineComponent( {
 	watch: {
 		isWritingComment( val ) {
 			const $input = $( this.$refs.input );
-			if ( val === true && this.$data.ve === null && mw.commentsExt.ve.Editor.static.isSupported() ) {
+			if ( val === true && this.ve === null && mw.commentsExt.ve.Editor.static.isSupported() ) {
 				// Create the VE instance for this editor
-				this.$data.ve = new mw.commentsExt.ve.Editor( $input );
+				this.ve = new mw.commentsExt.ve.Editor( $input );
 			} else if ( val === true ) {
-				if ( this.$data.ve ) {
-					this.$data.ve.target.getSurface().getView().focus();
+				if ( this.ve ) {
+					this.ve.target.getSurface().getView().focus();
 				} else {
 					setTimeout( () => $input.trigger( 'focus' ), 0 );
 				}
 			} else {
-				if ( this.$data.ve ) {
+				if ( this.ve ) {
 					// When we're no longer writing a comment, kill the VE instance
-					this.$data.ve.target.destroy();
-					this.$data.ve = null;
+					this.ve.target.destroy();
+					this.ve = null;
 				} else {
 					$input.val( '' );
 				}

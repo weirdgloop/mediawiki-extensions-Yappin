@@ -58,10 +58,10 @@ module.exports = exports = defineComponent( {
 		submitComment() {
 			const body = {};
 
-			if ( this.$data.ve ) {
+			if ( this.ve ) {
 				// We're going to pass the raw HTML from VE to our API. However, the API will parse it using Parsoid
 				// which will sanitize it before saving it in the database.
-				body.html = this.$data.ve.target.getSurface().getHtml();
+				body.html = this.ve.target.getSurface().getHtml();
 			} else {
 				// If we're not using VE, just send the raw value of the input as wikitext.
 				body.wikitext = $( this.$refs.input ).val();
@@ -108,7 +108,7 @@ module.exports = exports = defineComponent( {
 
 		if ( canUseVe ) {
 			// Create the VE instance for this editor
-			this.$data.ve = new mw.commentsExt.ve.Editor( $input );
+			this.ve = new mw.commentsExt.ve.Editor( $input );
 		}
 	}
 } );

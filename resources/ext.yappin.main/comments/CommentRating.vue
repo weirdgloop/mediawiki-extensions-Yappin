@@ -97,7 +97,7 @@ module.exports = exports = defineComponent( {
 					result.xhr.responseJSON, 'messageTranslations' ) ) {
 					if ( result.xhr.responseJSON.errorKey === 'yappin-submit-error-spam' ) {
 						// If the comment was rejected for spam/abuse, add a small cooldown
-						this.$data.store.globalCooldown = 10;
+						this.store.globalCooldown = 10;
 					}
 
 					if ( config.wgContentLanguage in result.xhr.responseJSON.messageTranslations ) {
