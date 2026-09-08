@@ -80,6 +80,7 @@ module.exports = exports = defineComponent( {
 				this.$props.comment.edited = newComment.edited;
 				this.$data.store.isEditing = null;
 			} ).fail( ( _, result ) => {
+				let error;
 				if ( result.xhr.responseJSON && Object.prototype.hasOwnProperty.call(
 					result.xhr.responseJSON, 'messageTranslations' ) ) {
 					if ( result.xhr.responseJSON.errorKey === 'yappin-submit-error-spam' ) {
