@@ -141,7 +141,7 @@ module.exports = exports = defineComponent( {
 
 				let path;
 				if ( this.$data.store.isSpecialComments ) {
-					path = `/comments/v0/all?${ qsp.toString() }`
+					path = `/comments/v0/all?${ qsp.toString() }`;
 				} else {
 					path = `/comments/v0/page/${ config.wgArticleId }?${ qsp.toString() }`;
 				}
