@@ -175,4 +175,4 @@
 		);
 	};
 
-}( jQuery, mediaWiki, OO, ve ) );
+}( jQuery, mw, OO, ve ) );

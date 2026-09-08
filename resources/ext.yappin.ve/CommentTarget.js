@@ -143,4 +143,4 @@ const registries = require( './registries.js' );
 
 	ve.init.mw.targetFactory.register( mw.commentsExt.ve.Target );
 
-}( mediaWiki, OO, ve ) );
+}( mw, OO, ve ) );
