@@ -131,7 +131,7 @@ module.exports = exports = defineComponent( {
 				const qsp = new URLSearchParams( {
 					limit: config.wgComments.resultsPerPage,
 					sort: this.$data.store.sortMethod,
-					user: this.$data.store.filterByUser ?? ''
+					user: this.$data.store.filterByUser || ''
 				} );
 				if ( this.$data.moreContinue ) {
 					qsp.set( 'continue', this.$data.moreContinue );
