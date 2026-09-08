@@ -313,7 +313,7 @@ class CommentsPager {
 					if ( str_starts_with( $this->sortMethod, 'sort_date' ) ) {
 						$this->continue = $row->c_timestamp;
 					} else {
-						$this->continue = $prevContinue + $this->limit;
+						$this->continue = (string)( (int)$prevContinue + $this->limit );
 					}
 					continue;
 				} else {
@@ -386,7 +386,7 @@ class CommentsPager {
 				if ( str_starts_with( $this->sortMethod, 'sort_date' ) ) {
 					$this->continue = $row->c_timestamp;
 				} else {
-					$this->continue = $prevContinue + $this->limit;
+					$this->continue = (string)( (int)$prevContinue + $this->limit );
 				}
 				continue;
 			}
