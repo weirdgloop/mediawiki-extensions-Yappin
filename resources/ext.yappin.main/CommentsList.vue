@@ -108,7 +108,7 @@ module.exports = exports = defineComponent( {
 
 			if ( this.$data.store.singleComment ) {
 				// Attempt to get the requested comment so that we can display it
-				api.get(`/comments/v0/comment/${ this.$data.store.singleComment }?sort=${ this.$data.store.sortMethod }` )
+				api.get( `/comments/v0/comment/${ this.$data.store.singleComment }?sort=${ this.$data.store.sortMethod }` )
 					.done( ( res ) => {
 						const comment = new Comment( res.comment );
 						if ( ( comment.page && comment.page.id === config.wgArticleId ) || this.$data.store.isSpecialComments ) {
@@ -125,7 +125,7 @@ module.exports = exports = defineComponent( {
 					} )
 					.always( () => {
 						this.$data.initialLoadCompleted = true;
-					} )
+					} );
 			} else {
 				// Get a list of all comments for the current page
 				const qsp = new URLSearchParams( {
@@ -168,7 +168,7 @@ module.exports = exports = defineComponent( {
 							this.$data.initialLoadCompleted = true;
 						}
 						this.$data.loading = false;
-					} )
+					} );
 			}
 		},
 		checkVisible() {
@@ -188,7 +188,7 @@ module.exports = exports = defineComponent( {
 				this.resetComments();
 			}
 		},
-		'store.ready': function( val ) {
+		'store.ready': function ( val ) {
 			if ( val === true ) {
 				this.checkVisible();
 			}
