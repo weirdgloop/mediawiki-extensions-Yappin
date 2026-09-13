@@ -32,9 +32,9 @@ const store = reactive( {
 	singleComment: null,
 	// Whether to filter the comments displayed by a specific user
 	filterByUser: null,
-	setSortMethod: ( method ) => {
-		this.sortMethod = method;
-		mw.storage.set( SORT_METHOD_STORAGE_KEY, this.sortMethod );
+	setSortMethod( method ) {
+		store.sortMethod = method;
+		mw.storage.set( SORT_METHOD_STORAGE_KEY, store.sortMethod );
 	}
 } );
 
