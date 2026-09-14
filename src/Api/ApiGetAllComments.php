@@ -10,7 +10,6 @@ use MediaWiki\Rest\Response;
 use MediaWiki\Rest\SimpleHandler;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\ActorStore;
-use MediaWiki\User\UserNameUtils;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\LBFactory;
@@ -23,7 +22,6 @@ class ApiGetAllComments extends SimpleHandler {
 		private readonly TitleFactory $titleFactory,
 		private readonly ActorStore $actorStore,
 		LBFactory $factory,
-		private readonly UserNameUtils $userNameUtils
 	) {
 		$this->dbr = $factory->getReplicaDatabase();
 	}
@@ -59,17 +57,8 @@ class ApiGetAllComments extends SimpleHandler {
 		$showDeleted = Utils::canUserModerate( $this->getAuthority() );
 
 		$targetActor = null;
-		$targetUserName = $params[ 'user' ] ? ucfirst( trim( $params[ 'user' ] ) ) : null;
-		if ( $targetUserName ) {
-			// To avoid useless DB lookups, check whether the name would be valid
-			if ( !$this->userNameUtils->isIP( $targetUserName ) && !$this->userNameUtils->isValid( $targetUserName ) ) {
-				return $this->getResponseFactory()->createJson( [
-					'query' => [],
-					'comments' => [],
-					'isMod' => $showDeleted
-				] );
-			}
-
+		$targetUserName = trim( $params[ 'user' ] ?? '' );
+		if ( $targetUserName !== '' ) {
 			$targetActor = $this->actorStore->findActorIdByName( $params[ 'user' ], $this->dbr );
 			if ( $targetActor === null ) {
 				return $this->getResponseFactory()->createJson( [

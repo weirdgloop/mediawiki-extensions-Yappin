@@ -81,8 +81,7 @@
 			"services": [
 				"TitleFactory",
 				"ActorStore",
-				"DBLoadBalancerFactory",
-				"UserNameUtils"
+				"DBLoadBalancerFactory"
 			]
 		},
 		{
