@@ -17,6 +17,7 @@ use MediaWiki\Rest\SimpleHandler;
 use MediaWiki\Status\StatusFormatter;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\TempUser\TempUserCreator;
+use MediaWiki\User\UserFactory;
 use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
 
@@ -31,6 +32,7 @@ class ApiPostComment extends SimpleHandler {
 		private readonly PageRestHelperFactory $pageRestHelperFactory,
 		private readonly CommentHelperService $commentHelperService,
 		readonly FormatterFactory $formatterFactory,
+		private readonly UserFactory $userFactory
 	) {
 		$this->statusFormatter = $formatterFactory->getStatusFormatter( RequestContext::getMain() );
 	}
@@ -40,7 +42,9 @@ class ApiPostComment extends SimpleHandler {
 	 */
 	public function run(): Response {
 		$auth = $this->getAuthority();
-		$canComment = Utils::canUserComment( $auth );
+		$user = $this->userFactory->newFromAuthority( $auth );
+
+		$canComment = Utils::canUserComment( $user );
 		if ( $canComment !== true ) {
 			throw new LocalizedHttpException( $canComment, 403 );
 		}

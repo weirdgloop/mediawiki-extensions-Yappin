@@ -11,6 +11,7 @@ use MediaWiki\Rest\HttpException;
 use MediaWiki\Rest\LocalizedHttpException;
 use MediaWiki\Rest\Response;
 use MediaWiki\Rest\SimpleHandler;
+use MediaWiki\User\UserFactory;
 use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
 
@@ -18,7 +19,8 @@ class ApiEditComment extends SimpleHandler {
 	public function __construct(
 		private readonly CommentFactory $commentFactory,
 		private readonly PageRestHelperFactory $pageRestHelperFactory,
-		private readonly CommentHelperService $commentHelperService
+		private readonly CommentHelperService $commentHelperService,
+		private readonly UserFactory $userFactory
 	) {
 	}
 
@@ -38,8 +40,9 @@ class ApiEditComment extends SimpleHandler {
 	 */
 	private function runEditComment(): Response {
 		$auth = $this->getAuthority();
+		$user = $this->userFactory->newFromAuthority( $auth );
 
-		$canComment = Utils::canUserComment( $auth );
+		$canComment = Utils::canUserComment( $user );
 		if ( $canComment !== true ) {
 			throw new LocalizedHttpException( $canComment, 403 );
 		}

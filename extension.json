@@ -53,6 +53,22 @@
 		"comments",
 		"comments-manage"
 	],
+	"RateLimits": {
+		"comments": {
+			"ip": [
+				8,
+				60
+			],
+			"newbie": [
+				8,
+				60
+			],
+			"user": [
+				30,
+				60
+			]
+		}
+	},
 	"GroupPermissions": {
 		"*": {
 			"comments": true
@@ -106,7 +122,8 @@
 				"TempUserCreator",
 				"PageRestHelperFactory",
 				"Yappin.CommentHelperService",
-				"FormatterFactory"
+				"FormatterFactory",
+				"UserFactory"
 			]
 		},
 		{
@@ -126,7 +143,8 @@
 			"services": [
 				"Yappin.CommentFactory",
 				"PageRestHelperFactory",
-				"Yappin.CommentHelperService"
+				"Yappin.CommentHelperService",
+				"UserFactory"
 			]
 		},
 		{

@@ -14,17 +14,21 @@ use Wikimedia\Message\MessageValue;
 class Utils {
 	/**
 	 * If the user cannot comment, this method returns a MessageValue object indicating why.
-	 * @param User|Authority $userOrAuthority
+	 * @param User $user
 	 * @return MessageValue|true
 	 */
-	public static function canUserComment( $userOrAuthority ) {
-		if ( !$userOrAuthority->isAllowed( 'comments' ) ) {
+	public static function canUserComment( $user ) {
+		if ( !$user->isAllowed( 'comments' ) ) {
 			return new MessageValue( 'yappin-submit-error-noperm' );
 		}
 
-		$block = $userOrAuthority->getBlock();
+		$block = $user->getBlock();
 		if ( $block && ( $block->isSitewide() || $block->appliesToRight( 'comments' ) ) ) {
 			return new MessageValue( 'yappin-submit-error-blocked' );
+		}
+
+		if ( $user->pingLimiter( 'comments' ) ) {
+			return new MessageValue( 'actionthrottledtext' );
 		}
 
 		return true;
