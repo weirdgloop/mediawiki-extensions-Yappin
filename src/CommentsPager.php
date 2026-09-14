@@ -210,6 +210,18 @@ class CommentsPager {
 		];
 
 		if ( $includeChildren ) {
+			if ( $this->continue !== null ) {
+				$offsetCond = $this->getOffsetCondition();
+				if ( $offsetCond !== null ) {
+					$conds[] = $offsetCond;
+				}
+				if ( !str_starts_with( $this->sortMethod, 'sort_date' ) ) {
+					// For queries without dates, we will revert to using actual query offset,
+					// which is probably slightly expensive for a large number of comments.
+					$opts[ 'OFFSET' ] = $this->continue;
+				}
+			}
+
 			$uqb = $this->db->newUnionQueryBuilder()->all();
 
 			$childConds = [];
@@ -235,18 +247,6 @@ class CommentsPager {
 			$this->addUserRatingJoin( $childSelect );
 			$this->addActorJoin( $childSelect );
 			$uqb->add( $childSelect );
-
-			if ( $this->continue !== null ) {
-				$offsetCond = $this->getOffsetCondition();
-				if ( $offsetCond !== null ) {
-					$conds[] = $offsetCond;
-				}
-				if ( !str_starts_with( $this->sortMethod, 'sort_date' ) ) {
-					// For queries without dates, we will revert to using actual query offset,
-					// which is probably slightly expensive for a large number of comments.
-					$opts[ 'OFFSET' ] = $this->continue;
-				}
-			}
 
 			$parentSelect = $this->db->newSelectQueryBuilder()
 				->select( 'c.*' )
