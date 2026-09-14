@@ -45,6 +45,7 @@ class ApiEditComment extends SimpleHandler {
 		}
 
 		$body = $this->getValidatedBody();
+		'@phan-var array $body';
 		$params = $this->getValidatedParams();
 		$commentId = (int)$params[ 'commentid' ];
 
@@ -108,6 +109,7 @@ class ApiEditComment extends SimpleHandler {
 	 */
 	private function runDeleteComment(): Response {
 		$body = $this->getValidatedBody();
+		'@phan-var array $body';
 		$params = $this->getValidatedParams();
 		$commentId = (int)$params[ 'commentid' ];
 		$delete = (bool)$body[ 'delete' ];
@@ -123,7 +125,7 @@ class ApiEditComment extends SimpleHandler {
 		$ownComment = $comment->getActor()->equals( $this->getAuthority()->getUser() );
 		$isMod = Utils::canUserModerate( $this->getAuthority() );
 
-		if ( $ownComment && $delete === true ) {
+		if ( $ownComment && $delete ) {
 			$comment->setDeletedActor( $comment->getActor() );
 		} elseif ( $isMod ) {
 			$comment->setDeletedActor( $delete ? $this->getAuthority()->getUser() : null );

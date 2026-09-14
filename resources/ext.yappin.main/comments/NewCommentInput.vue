@@ -7,7 +7,11 @@
 			></textarea>
 		</div>
 		<div class="comment-input-actions">
-			<cdx-button :disabled="store.globalCooldown" action="progressive" weight="primary" @click="submitComment">
+			<cdx-button
+				:disabled="store.globalCooldown"
+				action="progressive"
+				weight="primary"
+				@click="submitComment">
 				<span v-if="store.globalCooldown">{{ $i18n( 'yappin-submit-cooldown', store.globalCooldown ).text() }}</span>
 				<span v-else-if="isTopLevel">{{ $i18n( 'yappin-post-submit-top-level' ).text() }}</span>
 				<span v-else>{{ $i18n( 'yappin-post-submit-child' ).text() }}</span>
@@ -53,24 +57,35 @@ module.exports = exports = defineComponent( {
 			required: false
 		}
 	},
+	data() {
+		return {
+			store,
+			ve: null
+		};
+	},
+	computed: {
+		isTopLevel() {
+			return this.$props.parentId === null;
+		}
+	},
 	methods: {
 		submitComment() {
 			const body = {};
 
 			// If we're replying to another comment, we don't need to provide a page ID
 			if ( this.$props.parentId ) {
-				body[ 'parentid' ] = this.$props.parentId;
+				body.parentid = this.$props.parentId;
 			} else {
-				body[ 'pageid' ] = config.wgArticleId;
+				body.pageid = config.wgArticleId;
 			}
 
-			if ( this.$data.ve ) {
+			if ( this.ve ) {
 				// We're going to pass the raw HTML from VE to our API. However, the API will parse it using Parsoid
 				// which will sanitize it before saving it in the database.
-				body[ 'html' ] = this.$data.ve.target.getSurface().getHtml();
+				body.html = this.ve.target.getSurface().getHtml();
 			} else {
 				// If we're not using VE, just send the raw value of the input as wikitext.
-				body[ 'wikitext' ] = $( this.$refs.input ).val();
+				body.wikitext = $( this.$refs.input ).val();
 			}
 
 			// Use .ajax here rather than .post to circumvent bug: https://bugs.jquery.com/ticket/12326/
@@ -81,70 +96,60 @@ module.exports = exports = defineComponent( {
 				contentType: 'application/json'
 			} ).then( ( data ) => {
 				data.comment.ours = true;
-				let newComment = new Comment( data.comment );
+				const newComment = new Comment( data.comment );
 
 				if ( this.$props.parentId ) {
 					// Reply to an existing comment, add it to the end of the children list
-					const ix = this.$data.store.comments.findIndex( ( c ) => c.id === this.$props.parentId );
-					this.$data.store.comments[ix].children.push( newComment );
+					const ix = this.store.comments.findIndex( ( c ) => c.id === this.$props.parentId );
+					this.store.comments[ ix ].children.push( newComment );
 				} else {
 					// Top-level comment, just throw it to the top of the comments list
-					this.$data.store.comments.unshift( newComment );
+					this.store.comments.unshift( newComment );
 				}
 
 				this.$props.onCancel();
 			} ).fail( ( _, result ) => {
+				let error;
 				if ( result.xhr.responseJSON && Object.prototype.hasOwnProperty.call(
 					result.xhr.responseJSON, 'messageTranslations' ) ) {
 					if ( result.xhr.responseJSON.errorKey === 'yappin-submit-error-spam' ) {
 						// If the comment was rejected for spam/abuse, add a small cooldown
-						this.$data.store.globalCooldown = 10;
+						this.store.globalCooldown = 10;
 					}
 
 					if ( config.wgContentLanguage in result.xhr.responseJSON.messageTranslations ) {
 						error = result.xhr.responseJSON.messageTranslations[ config.wgContentLanguage ];
 					} else {
-						error = result.xhr.responseJSON.messageTranslations.en
+						error = result.xhr.responseJSON.messageTranslations.en;
 					}
 				} else {
-					error = mw.Message( 'unknown-error' );
+					error = mw.message( 'unknown-error' );
 				}
 				mw.notify( error, { type: 'error', tag: 'post-comment-error' } );
-			} )
+			} );
 		}
-	},
-	data() {
-		return {
-			store,
-			ve: null
-		};
 	},
 	watch: {
 		isWritingComment( val ) {
 			const $input = $( this.$refs.input );
-			if ( val === true && this.$data.ve === null && mw.commentsExt.ve.Editor.static.isSupported() ) {
+			if ( val === true && this.ve === null && mw.commentsExt.ve.Editor.static.isSupported() ) {
 				// Create the VE instance for this editor
-				this.$data.ve = new mw.commentsExt.ve.Editor( $input, $input.val() );
+				this.ve = new mw.commentsExt.ve.Editor( $input );
 			} else if ( val === true ) {
-				if ( this.$data.ve ) {
-					this.$data.ve.target.getSurface().getView().focus();
+				if ( this.ve ) {
+					this.ve.target.getSurface().getView().focus();
 				} else {
-					setTimeout(() => $input.focus(), 0);
+					setTimeout( () => $input.trigger( 'focus' ), 0 );
 				}
 			} else {
-				if ( this.$data.ve ) {
+				if ( this.ve ) {
 					// When we're no longer writing a comment, kill the VE instance
-					this.$data.ve.target.destroy();
-					this.$data.ve = null;
+					this.ve.target.destroy();
+					this.ve = null;
 				} else {
-					$input.val('');
+					$input.val( '' );
 				}
 			}
-		}
-	},
-	computed: {
-		isTopLevel() {
-			return this.$props.parentId === null
 		}
 	}
 } );

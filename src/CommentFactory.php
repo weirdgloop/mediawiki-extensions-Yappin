@@ -54,7 +54,7 @@ class CommentFactory {
 		}
 
 		$parentId = (int)$row->c_parent;
-		if ( !empty( $parentId ) ) {
+		if ( $parentId ) {
 			$comment->mParentId = $parentId;
 		}
 

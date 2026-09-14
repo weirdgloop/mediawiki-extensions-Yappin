@@ -1,0 +1,4 @@
+AbuseFilter:
+  repo: https://github.com/wikimedia/mediawiki-extensions-AbuseFilter.git
+VisualEditor:
+  repo: https://github.com/wikimedia/mediawiki-extensions-VisualEditor.git

@@ -1,16 +1,17 @@
 :root {
-	--comments-primary-background: var(--background-color-base, #ffffff);
-	--comments-secondary-background: var(--background-color-neutral, #f7f7f7);
-	--comments-negative: var(--color-error, #6c1515);
-	--comments-positive: var(--color-success, #156c17);
-	--comments-border: var(--border-color-base, #eae9e9);
-	--comments-highlight-background: var(--background-color-progressive-subtle, #fffce8);
-	--comments-highlight-border: var(--border-color-progressive, #eee6c5);
-	--comments-deleted-background: var(--background-color-error-subtle, #ffe8e8);
-	--comments-deleted-border: var(--border-color-destructive, #eec5c5);
-	--comments-muted: var(--color-subtle, #757575);
+	--comments-primary-background: var( --background-color-base, #fff );
+	--comments-secondary-background: var( --background-color-neutral, #f7f7f7 );
+	--comments-negative: var( --color-error, #6c1515 );
+	--comments-positive: var( --color-success, #156c17 );
+	--comments-border: var( --border-color-base, #eae9e9 );
+	--comments-highlight-background: var( --background-color-progressive-subtle, #fffce8 );
+	--comments-highlight-border: var( --border-color-progressive, #eee6c5 );
+	--comments-deleted-background: var( --background-color-error-subtle, #ffe8e8 );
+	--comments-deleted-border: var( --border-color-destructive, #eec5c5 );
+	--comments-muted: var( --color-subtle, #757575 );
 }
 
+/* stylelint-disable-next-line selector-max-id */
 #ext-comments-container {
 	button {
 		cursor: pointer;
@@ -23,11 +24,11 @@
 	.comment-input-placeholder {
 		width: 100%;
 		height: 40px;
-		background: var(--comments-primary-background);
-		border: 1px solid var(--comments-border);
+		background: var( --comments-primary-background );
+		border: 1px solid var( --comments-border );
 		text-align: left;
 		padding: 0 1em;
-		color: var(--comments-muted);
+		color: var( --comments-muted );
 		font-weight: 200;
 		margin-bottom: 1em;
 	}
@@ -39,7 +40,8 @@
 		margin-top: 0.2em;
 		margin-left: 0.5em;
 
-		button, a {
+		button,
+		a {
 			font-weight: 200;
 			font-size: 0.8em;
 			background: none;
@@ -51,7 +53,7 @@
 			padding: 0;
 
 			.cdx-icon {
-				color: var(--comments-muted);
+				color: var( --comments-muted );
 			}
 		}
 
@@ -64,10 +66,6 @@
 		}
 	}
 
-	.comment-input-container {
-		margin-bottom: 0.5em;
-	}
-
 	.ext-comments-comments-list {
 		display: flex;
 		flex-direction: column;
@@ -78,8 +76,8 @@
 		display: flex;
 		flex-direction: column;
 		padding: 0.5em 0.25em;
-		border: 1px solid var(--comments-border);
-		box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.05);
+		border: 1px solid var( --comments-border );
+		box-shadow: 0 4px 5px 0 rgba( 0, 0, 0, 0.05 );
 
 		> div:first-child {
 			display: flex;
@@ -87,16 +85,16 @@
 		}
 
 		&.is-highlighted {
-			background: var(--comments-highlight-background);
-			border-color: var(--comments-highlight-border);
+			background: var( --comments-highlight-background );
+			border-color: var( --comments-highlight-border );
 		}
 
-		&[data-deleted="true"] {
-			background: var(--comments-deleted-background);
-			border-color: var(--comments-deleted-border);
+		&[ data-deleted='true' ] {
+			background: var( --comments-deleted-background );
+			border-color: var( --comments-deleted-border );
 
 			> div > .comment-body {
-				margin-left: calc(24px + 0.5em);
+				margin-left: calc( 24px + 0.5em );
 			}
 		}
 
@@ -122,7 +120,7 @@
 
 		.comment-edited {
 			font-weight: 100;
-			color: var(--comments-muted);
+			color: var( --comments-muted );
 		}
 
 		.comment-body {
@@ -131,6 +129,7 @@
 
 		.comment-content {
 			img {
+				/* stylelint-disable-next-line declaration-no-important */
 				max-width: 50% !important;
 				height: auto;
 			}
@@ -142,42 +141,42 @@
 			gap: 0.5em;
 			margin-bottom: 0.5em;
 
-			> .ext-comments-comment-item:not([data-deleted]):not(.is-highlighted) {
-				background: var(--comments-secondary-background);
+			> .ext-comments-comment-item:not( [ data-deleted ] ):not( .is-highlighted ) {
+				background: var( --comments-secondary-background );
 			}
 		}
 
 		.comment-action-btn {
 			background: none;
-			border: none;
+			border: 0;
 			padding: 0.1em;
 
 			.cdx-icon {
-				color: var(--comments-muted);
+				color: var( --comments-muted );
 				transition: color 0.25s ease;
 			}
 
 			&.comment-action-edit:hover .cdx-icon {
-				color: var(--color-progressive--hover, #05408e);
+				color: var( --color-progressive--hover, #05408e );
 			}
 
 			&.comment-action-delete:hover .cdx-icon {
-				color: var(--color-destructive--hover, #8e0505);
+				color: var( --color-destructive--hover, #8e0505 );
 			}
 
 			&.comment-action-link:hover .cdx-icon {
-				color: var(--color-progressive--hover, #05798e);
+				color: var( --color-progressive--hover, #05798e );
 			}
 		}
 	}
 
 	.comment-rating {
 		&.rating-negative {
-			color: var(--comments-negative);
+			color: var( --comments-negative );
 		}
 
 		&.rating-positive {
-			color: var(--comments-positive);
+			color: var( --comments-positive );
 		}
 	}
 
@@ -187,33 +186,33 @@
 
 		button {
 			background: none;
-			border: none;
+			border: 0;
 
 			.cdx-icon {
-				color: var(--comments-muted);
+				color: var( --comments-muted );
 				transition: color 0.1s ease;
 			}
 
-			&.comment-rating-btn[data-type="upvote"][value="true"] .cdx-icon {
-				color: var(--comments-positive);
+			&.comment-rating-btn[ data-type='upvote' ][ value='true' ] .cdx-icon {
+				color: var( --comments-positive );
 			}
 
-			&.comment-rating-btn[data-type="downvote"][value="true"] .cdx-icon {
-				color: var(--comments-negative);
+			&.comment-rating-btn[ data-type='downvote' ][ value='true' ] .cdx-icon {
+				color: var( --comments-negative );
 			}
 		}
 	}
 
 	.comment-info-full {
-		background: var(--comments-secondary-background);
+		background: var( --comments-secondary-background );
 		text-align: center;
 		padding: 1em;
-		box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.05);
+		box-shadow: 0 4px 5px 0 rgba( 0, 0, 0, 0.05 );
 		text-transform: uppercase;
 		font-weight: 600;
-		color: var(--comments-muted);
+		color: var( --comments-muted );
 		font-size: 0.8em;
-		border: 1px solid var(--comments-border);
+		border: 1px solid var( --comments-border );
 	}
 
 	.comment-list-toolbar {
@@ -242,17 +241,19 @@
 	}
 
 	.comment-input-container {
+		margin-bottom: 0.5em;
+
 		textarea {
 			width: 100%;
 			resize: none;
-			border: 1px solid var(--comments-border);
+			border: 1px solid var( --comments-border );
 		}
 
 		.ve-area-wrapper {
-			background: var(--comments-primary-background);
+			background: var( --comments-primary-background );
 
 			.ve-init-target {
-				border: 1px solid var(--comments-border);
+				border: 1px solid var( --comments-border );
 			}
 
 			.ve-ce-surface {
@@ -260,7 +261,7 @@
 			}
 
 			.oo-ui-toolbar-bar {
-				background: var(--comments-secondary-background);
+				background: var( --comments-secondary-background );
 			}
 		}
 

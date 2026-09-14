@@ -1,11 +1,18 @@
 <template>
-	<div class="ext-comments-comment-item" :class="{ 'is-highlighted': parseInt( store.singleComment ) === comment.id }" :data-comment-id="comment.id" :data-deleted="comment.deleted !== null">
+	<div
+		class="ext-comments-comment-item"
+		:class="{ 'is-highlighted': parseInt( store.singleComment ) === comment.id }"
+		:data-comment-id="comment.id"
+		:data-deleted="comment.deleted !== null">
 		<div>
-			<comment-rating :comment="comment" v-if="!comment.deleted"></comment-rating>
+			<comment-rating v-if="!comment.deleted" :comment="comment"></comment-rating>
 			<div class="comment-body">
 				<div class="comment-header">
 					<div class="comment-author-wrapper">
-						<a class="comment-author mw-userlink" :class="{ 'mw-tempuserlink': comment.user.temp }" :href="userPageLink">
+						<a
+							class="comment-author mw-userlink"
+							:class="{ 'mw-tempuserlink': comment.user.temp }"
+							:href="userPageLink">
 							{{ comment.user.anon ? $i18n( 'yappin-anon' ) : comment.user.name }}
 						</a>
 						<div class="comment-info">
@@ -18,18 +25,21 @@
 							>{{ rating }}</span>
 							&#183;
 							<span class="comment-date" :title="comment.created">{{ date }}</span>
-							<span class="comment-edited" :title="comment.edited" v-if="comment.edited !== null">  {{ $i18n( 'yappin-edited', editedDate ).text() }}</span>
 							<span
-								class="comment-page"
+								v-if="comment.edited !== null"
+								class="comment-edited"
+								:title="comment.edited">  {{ $i18n( 'yappin-edited', editedDate ).text() }}</span>
+							<span
 								v-if="targetPage"
+								class="comment-page"
 							>
 								&#183; <span v-i18n-html="targetPageMessage"></span>
 							</span>
 							<span
-								class="comment-parent"
 								v-if="!store.singleComment && store.isSpecialComments && comment.parent"
+								class="comment-parent"
 							>
-								<span @click="handleParentTextClick" v-i18n-html="targetParentMessage"></span>
+								<span v-i18n-html="targetParentMessage" @click="handleParentTextClick"></span>
 							</span>
 						</div>
 					</div>
@@ -47,9 +57,7 @@
 							class="comment-action-delete"
 							:icon="comment.deleted ? cdxIconRestore : cdxIconTrash"
 							:on-click="deleteComment"
-							:title="$i18n(
-							comment.deleted ? 'yappin-action-label-undelete' : 'yappin-action-label-delete'
-						).text()"
+							:title="deleteActionLabel"
 						></comment-action>
 						<comment-action
 							v-if="!comment.deleted"
@@ -60,8 +68,11 @@
 						></comment-action>
 					</div>
 				</div>
-				<edit-comment-input :comment="comment" v-if="store.isEditing === comment.id"></edit-comment-input>
-				<div v-else class="comment-content" v-html="comment.html"></div>
+				<edit-comment-input v-if="store.isEditing === comment.id" :comment="comment"></edit-comment-input>
+				<div
+					v-else
+					class="comment-content"
+					v-html="comment.html"></div>
 				<div v-if="comment.children.length > 0" class="comment-children">
 					<comment-item
 						v-for="c in comment.children"
@@ -84,17 +95,20 @@
 				class="comment-reply-button"
 				@click="isWritingReply = true"
 			>
-				<cdx-icon :icon="cdxIconShare" dir="rtl" size="small"></cdx-icon>
+				<cdx-icon
+					:icon="cdxIconShare"
+					dir="rtl"
+					size="small"></cdx-icon>
 				<span>{{ $i18n( 'yappin-post-placeholder-child' ) }}</span>
 			</button>
 			<a
 				v-if="comment.numChildren > 0"
 				:href="singleCommentLink"
 			>
-				{{ $i18n( 'yappin-view-replies', this.comment.numChildren ) }}
+				{{ $i18n( 'yappin-view-replies', comment.numChildren ) }}
 			</a>
 		</div>
-		</div>
+	</div>
 </template>
 
 <script>
@@ -102,9 +116,9 @@ const { defineComponent } = require( 'vue' );
 const store = require( '../store.js' );
 const Comment = require( '../comment.js' );
 const CommentAction = require( './CommentAction.vue' );
-const CommentRating = require( './CommentRating.vue' )
-const NewCommentInput = require( '../comments/NewCommentInput.vue' );
-const EditCommentInput = require( '../comments/EditCommentInput.vue' );
+const CommentRating = require( './CommentRating.vue' );
+const NewCommentInput = require( './NewCommentInput.vue' );
+const EditCommentInput = require( './EditCommentInput.vue' );
 const { CdxIcon } = require( '../codex.js' );
 const {
 	cdxIconTrash, cdxIconLink, cdxIconEdit, cdxIconRestore, cdxIconShare
@@ -133,6 +147,15 @@ module.exports = exports = defineComponent( {
 			required: false
 		}
 	},
+	setup() {
+		return {
+			cdxIconTrash,
+			cdxIconLink,
+			cdxIconEdit,
+			cdxIconRestore,
+			cdxIconShare
+		};
+	},
 	data() {
 		return {
 			store,
@@ -157,7 +180,7 @@ module.exports = exports = defineComponent( {
 			return title.getUrl();
 		},
 		/**
-		 * @returns {mw.Title|null}
+		 * @return {mw.Title|null}
 		 */
 		targetPage() {
 			if ( this.comment.page && this.store.isSpecialComments ) {
@@ -186,15 +209,22 @@ module.exports = exports = defineComponent( {
 			const url = new URL( this.targetPage ? this.targetPage.getUrl() : document.location, config.wgServer );
 			url.searchParams.set( 'comment', this.comment.id );
 			return url;
+		},
+		deleteActionLabel() {
+			const key = this.comment.deleted ?
+				'yappin-action-label-undelete' :
+				'yappin-action-label-delete';
+			return mw.message( key ).text();
 		}
 	},
 	methods: {
 		deleteComment() {
-			api.delete( `/comments/v0/comment/${this.$props.comment.id}/edit`, {
+			api.delete( `/comments/v0/comment/${ this.$props.comment.id }/edit`, {
 				delete: !this.$props.comment.deleted
 			} ).then( ( data ) => {
 				this.$props.comment.deleted = data.deleted;
 			} ).fail( ( _, result ) => {
+				let error;
 				if ( result.xhr.responseJSON && Object.prototype.hasOwnProperty.call(
 					result.xhr.responseJSON, 'messageTranslations' ) ) {
 					if ( result.xhr.responseJSON.errorKey === 'yappin-submit-error-spam' ) {
@@ -205,30 +235,22 @@ module.exports = exports = defineComponent( {
 					if ( config.wgContentLanguage in result.xhr.responseJSON.messageTranslations ) {
 						error = result.xhr.responseJSON.messageTranslations[ config.wgContentLanguage ];
 					} else {
-						error = result.xhr.responseJSON.messageTranslations.en
+						error = result.xhr.responseJSON.messageTranslations.en;
 					}
 				} else {
-					error = mw.Message( 'unknown-error' );
+					error = mw.message( 'unknown-error' );
 				}
 				mw.notify( error, { type: 'error', tag: 'post-comment-error' } );
-			} )
+			} );
 		},
 		linkComment() {
+			// eslint-disable-next-line compat/compat
 			navigator.clipboard.writeText( this.singleCommentLink.href );
 			mw.notify( mw.msg( 'yappin-action-link-copied' ), { tag: 'copy-comment' } );
-		},
-	},
-	setup() {
-		return {
-			cdxIconTrash,
-			cdxIconLink,
-			cdxIconEdit,
-			cdxIconRestore,
-			cdxIconShare
 		}
 	},
 	mounted() {
-		if (parseInt( this.store.singleComment ) === this.comment.id) {
+		if ( parseInt( this.store.singleComment ) === this.comment.id ) {
 			this.$el.scrollIntoView( { behavior: 'smooth', block: 'center' } );
 		}
 	}

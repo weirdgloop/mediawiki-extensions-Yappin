@@ -18,6 +18,7 @@ class ReparseCommentsJob extends Job {
 		parent::__construct( 'ReparseCommentsJob', $params );
 	}
 
+	/** @inheritDoc */
 	public function run() {
 		$start = $this->params[ 'start' ];
 		$end = $this->params[ 'end' ];

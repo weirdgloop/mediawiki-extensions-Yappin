@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\Yappin\Api;
 
 use InvalidArgumentException;
+use LogicException;
 use MediaWiki\Extension\Yappin\CommentFactory;
 use MediaWiki\Extension\Yappin\CommentsPager;
 use MediaWiki\Extension\Yappin\Models\Comment;
@@ -14,14 +15,11 @@ use MediaWiki\Rest\SimpleHandler;
 use MediaWiki\User\ActorStore;
 use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
-use Wikimedia\Rdbms\IDatabase;
+use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\LBFactory;
 
 class ApiGetCommentById extends SimpleHandler {
-	/**
-	 * @var IDatabase
-	 */
-	private $dbr;
+	private IReadableDatabase $dbr;
 
 	public function __construct(
 		private readonly CommentFactory $commentFactory,
@@ -32,7 +30,7 @@ class ApiGetCommentById extends SimpleHandler {
 	}
 
 	/**
-	 * @param object{ c: Comment, ur: CommentRating, ours: bool } $r
+	 * @param array{c: Comment, ur: int, ours: bool, p: ?array{title: string, ns: int, id: int}, num_children: int} $r
 	 * @return array
 	 */
 	private function getCommentDataFromResult( $r ) {
@@ -57,7 +55,7 @@ class ApiGetCommentById extends SimpleHandler {
 
 		try {
 			$comment = $this->commentFactory->newFromId( $commentId );
-		} catch ( InvalidArgumentException $ex ) {
+		} catch ( InvalidArgumentException ) {
 			throw new LocalizedHttpException(
 				new MessageValue( 'yappin-generic-error-comment-missing', [ $commentId ] ), 400
 			);
@@ -96,6 +94,9 @@ class ApiGetCommentById extends SimpleHandler {
 			} else {
 				$parent = $data;
 			}
+		}
+		if ( !is_array( $parent ) ) {
+			throw new LogicException( 'Expected $parent to be an array!' );
 		}
 
 		return $this->getResponseFactory()->createJson( [

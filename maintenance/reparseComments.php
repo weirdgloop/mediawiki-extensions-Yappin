@@ -41,7 +41,7 @@ class ReparseComments extends Maintenance {
 		}
 
 		$jobQueueGroup = $this->getServiceContainer()->getJobQueueGroupFactory()->makeJobQueueGroup();
-		$this->output( "Scheduling jobs between $from and $to...\n");
+		$this->output( "Scheduling jobs between $from and $to...\n" );
 
 		$jobs = 0;
 		foreach ( array_chunk( range( $from, $to ), $this->getBatchSize() ) as $batch ) {
@@ -57,7 +57,7 @@ class ReparseComments extends Maintenance {
 			$jobs++;
 		}
 
-		$this->output( "Scheduled $jobs jobs.\n");
+		$this->output( "Scheduled $jobs jobs.\n" );
 	}
 }
 

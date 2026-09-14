@@ -12,14 +12,12 @@ use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\ActorStore;
 use MediaWiki\User\UserNameUtils;
 use Wikimedia\ParamValidator\ParamValidator;
-use Wikimedia\Rdbms\IDatabase;
+use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\LBFactory;
 
 class ApiGetAllComments extends SimpleHandler {
-	/**
-	 * @var IDatabase
-	 */
-	private $dbr;
+
+	private IReadableDatabase $dbr;
 
 	public function __construct(
 		private readonly TitleFactory $titleFactory,
@@ -31,7 +29,7 @@ class ApiGetAllComments extends SimpleHandler {
 	}
 
 	/**
-	 * @param object{ c: Comment, ur: CommentRating, ours: bool } $r
+	 * @param array{c: Comment, ur: int, ours: bool, p: ?array{title: string, ns: int, id: int}, num_children: int} $r
 	 * @return array
 	 */
 	private function getCommentDataFromResult( $r ) {
@@ -62,7 +60,7 @@ class ApiGetAllComments extends SimpleHandler {
 
 		$targetActor = null;
 		$targetUserName = $params[ 'user' ] ? ucfirst( trim( $params[ 'user' ] ) ) : null;
-		if ( !empty( $targetUserName ) ) {
+		if ( $targetUserName ) {
 			// To avoid useless DB lookups, check whether the name would be valid
 			if ( !$this->userNameUtils->isIP( $targetUserName ) && !$this->userNameUtils->isValid( $targetUserName ) ) {
 				return $this->getResponseFactory()->createJson( [

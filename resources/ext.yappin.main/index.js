@@ -15,6 +15,7 @@ const
  * @return {void}
  */
 function initApp() {
+	// eslint-disable-next-line no-jquery/no-global-selector
 	$( '#bodyContent' ).append(
 		$( '<div>' ).attr( 'id', 'ext-comments-container' )
 	);

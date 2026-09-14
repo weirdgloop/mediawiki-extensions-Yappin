@@ -1,12 +1,12 @@
 const SORT_OPTIONS = [
 	{ label: mw.message( 'yappin-sort-highest-rated' ).text(), value: 'sort_rating_desc' },
 	{ label: mw.message( 'yappin-sort-newest' ).text(), value: 'sort_date_desc' },
-	{ label: mw.message( 'yappin-sort-oldest' ).text(), value: 'sort_date_asc' },
+	{ label: mw.message( 'yappin-sort-oldest' ).text(), value: 'sort_date_asc' }
 ];
 
 /**
  * @param {HTMLElement|jQuery} el
- * @returns {boolean}
+ * @return {boolean}
  */
 const isElementInView = ( el ) => {
 	if ( el instanceof jQuery ) {

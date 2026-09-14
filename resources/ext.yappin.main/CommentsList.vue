@@ -108,7 +108,7 @@ module.exports = exports = defineComponent( {
 
 			if ( this.$data.store.singleComment ) {
 				// Attempt to get the requested comment so that we can display it
-				api.get(`/comments/v0/comment/${ this.$data.store.singleComment }?sort=${ this.$data.store.sortMethod }` )
+				api.get( `/comments/v0/comment/${ this.$data.store.singleComment }?sort=${ this.$data.store.sortMethod }` )
 					.done( ( res ) => {
 						const comment = new Comment( res.comment );
 						if ( ( comment.page && comment.page.id === config.wgArticleId ) || this.$data.store.isSpecialComments ) {
@@ -125,13 +125,13 @@ module.exports = exports = defineComponent( {
 					} )
 					.always( () => {
 						this.$data.initialLoadCompleted = true;
-					} )
+					} );
 			} else {
 				// Get a list of all comments for the current page
 				const qsp = new URLSearchParams( {
 					limit: config.wgComments.resultsPerPage,
 					sort: this.$data.store.sortMethod,
-					user: this.$data.store.filterByUser ?? ''
+					user: this.$data.store.filterByUser || ''
 				} );
 				if ( this.$data.moreContinue ) {
 					qsp.set( 'continue', this.$data.moreContinue );
@@ -141,7 +141,7 @@ module.exports = exports = defineComponent( {
 
 				let path;
 				if ( this.$data.store.isSpecialComments ) {
-					path = `/comments/v0/all?${ qsp.toString() }`
+					path = `/comments/v0/all?${ qsp.toString() }`;
 				} else {
 					path = `/comments/v0/page/${ config.wgArticleId }?${ qsp.toString() }`;
 				}
@@ -168,14 +168,14 @@ module.exports = exports = defineComponent( {
 							this.$data.initialLoadCompleted = true;
 						}
 						this.$data.loading = false;
-					} )
+					} );
 			}
 		},
 		checkVisible() {
 			// If URL params specify a comment we want to see, then always load comment list
 			const shouldLoad = isElementInView( this.$el ) || this.store.singleComment;
-			if ( shouldLoad && this.$data.store.ready && !this.$data.elementSeen ) {
-				this.$data.elementSeen = true;
+			if ( shouldLoad && this.$data.store.ready && !this.elementSeen ) {
+				this.elementSeen = true;
 				this.loadComments();
 			}
 		}
@@ -188,7 +188,7 @@ module.exports = exports = defineComponent( {
 				this.resetComments();
 			}
 		},
-		'store.ready': function( val ) {
+		'store.ready': function ( val ) {
 			if ( val === true ) {
 				this.checkVisible();
 			}

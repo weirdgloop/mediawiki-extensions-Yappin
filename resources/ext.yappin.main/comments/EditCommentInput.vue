@@ -8,7 +8,11 @@
 				></textarea>
 			</div>
 			<div class="comment-input-actions">
-				<cdx-button :disabled="store.globalCooldown" action="progressive" weight="primary" @click="submitComment">
+				<cdx-button
+					:disabled="store.globalCooldown"
+					action="progressive"
+					weight="primary"
+					@click="submitComment">
 					<span v-if="store.globalCooldown">{{ $i18n( 'yappin-submit-cooldown', store.globalCooldown ).text() }}</span>
 					<span v-else>{{ $i18n( 'yappin-post-edit' ).text() }}</span>
 				</cdx-button>
@@ -44,32 +48,39 @@ module.exports = exports = defineComponent( {
 			required: true
 		}
 	},
+	data() {
+		return {
+			store,
+			ve: null
+		};
+	},
 	methods: {
 		submitComment() {
 			const body = {};
 
-			if ( this.$data.ve ) {
+			if ( this.ve ) {
 				// We're going to pass the raw HTML from VE to our API. However, the API will parse it using Parsoid
 				// which will sanitize it before saving it in the database.
-				body[ 'html' ] = this.$data.ve.target.getSurface().getHtml();
+				body.html = this.ve.target.getSurface().getHtml();
 			} else {
 				// If we're not using VE, just send the raw value of the input as wikitext.
-				body[ 'wikitext' ] = $( this.$refs.input ).val();
+				body.wikitext = $( this.$refs.input ).val();
 			}
 
 			// Use .ajax here rather than .post to circumvent bug: https://bugs.jquery.com/ticket/12326/
-			api.ajax( `/comments/v0/comment/${this.$props.comment.id}/edit`, {
+			api.ajax( `/comments/v0/comment/${ this.$props.comment.id }/edit`, {
 				type: 'PUT',
-				data: JSON.stringify(body),
+				data: JSON.stringify( body ),
 				dataType: 'json',
 				contentType: 'application/json'
-			}).then( ( data ) => {
+			} ).then( ( data ) => {
 				const newComment = new Comment( data.comment );
 				this.$props.comment.html = newComment.html;
 				this.$props.comment.wikitext = newComment.wikitext;
 				this.$props.comment.edited = newComment.edited;
 				this.$data.store.isEditing = null;
 			} ).fail( ( _, result ) => {
+				let error;
 				if ( result.xhr.responseJSON && Object.prototype.hasOwnProperty.call(
 					result.xhr.responseJSON, 'messageTranslations' ) ) {
 					if ( result.xhr.responseJSON.errorKey === 'yappin-submit-error-spam' ) {
@@ -80,20 +91,14 @@ module.exports = exports = defineComponent( {
 					if ( config.wgContentLanguage in result.xhr.responseJSON.messageTranslations ) {
 						error = result.xhr.responseJSON.messageTranslations[ config.wgContentLanguage ];
 					} else {
-						error = result.xhr.responseJSON.messageTranslations.en
+						error = result.xhr.responseJSON.messageTranslations.en;
 					}
 				} else {
-					error = mw.Message( 'unknown-error' );
+					error = mw.message( 'unknown-error' );
 				}
 				mw.notify( error, { type: 'error', tag: 'post-comment-error' } );
-			} )
+			} );
 		}
-	},
-	data() {
-		return {
-			store,
-			ve: null
-		};
 	},
 	mounted() {
 		const $input = $( this.$refs.input );
@@ -103,7 +108,7 @@ module.exports = exports = defineComponent( {
 
 		if ( canUseVe ) {
 			// Create the VE instance for this editor
-			this.$data.ve = new mw.commentsExt.ve.Editor( $input, this.$props.comment.html );
+			this.ve = new mw.commentsExt.ve.Editor( $input );
 		}
 	}
 } );

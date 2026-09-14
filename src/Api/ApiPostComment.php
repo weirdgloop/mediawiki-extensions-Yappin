@@ -46,6 +46,7 @@ class ApiPostComment extends SimpleHandler {
 		}
 
 		$body = $this->getValidatedBody();
+		'@phan-var array $body';
 		$pageId = (int)$body[ 'pageid' ];
 		$parentId = (int)$body[ 'parentid' ];
 
@@ -122,7 +123,7 @@ class ApiPostComment extends SimpleHandler {
 			$wikitext,
 			$page
 		);
-		
+
 		$comment->setWikitext( $wikitext );
 		$comment->setHtml( $html );
 		$af = $this->commentHelperService->checkAbuseFilter( $user, $page, $wikitext );

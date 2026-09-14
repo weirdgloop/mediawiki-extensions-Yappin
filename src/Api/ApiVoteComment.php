@@ -32,6 +32,7 @@ class ApiVoteComment extends SimpleHandler {
 	 */
 	public function run(): Response {
 		$body = $this->getValidatedBody();
+		'@phan-var array $body';
 		$params = $this->getValidatedParams();
 
 		$commentId = (int)$params[ 'commentid' ];
