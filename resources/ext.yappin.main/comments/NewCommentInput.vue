@@ -60,6 +60,7 @@ module.exports = exports = defineComponent( {
 	},
 	data() {
 		return {
+			invalidatedAnonToken: false,
 			store,
 			ve: null
 		};
@@ -99,9 +100,10 @@ module.exports = exports = defineComponent( {
 					dataType: 'json',
 					contentType: 'application/json'
 				} ).then( ( data ) => {
-					if ( data.comment.user.temp && mw.user.isAnon() ) {
+					if ( data.comment.user.temp && !this.invalidatedAnonToken && mw.user.isAnon() ) {
 						// A temporary account was created, so we need to invalidate the CSRF token
 						actionApi.badToken( 'csrf' );
+						this.invalidatedAnonToken = true;
 					}
 
 					data.comment.ours = !data.comment.user.anon;
