@@ -60,7 +60,6 @@ module.exports = exports = defineComponent( {
 	},
 	data() {
 		return {
-			invalidatedAnonToken: false,
 			store,
 			ve: null
 		};
@@ -71,7 +70,7 @@ module.exports = exports = defineComponent( {
 		}
 	},
 	methods: {
-		submitComment() {
+		submitComment( retryOnTokenMismatch = true ) {
 			const body = {};
 
 			// If we're replying to another comment, we don't need to provide a page ID
@@ -100,12 +99,6 @@ module.exports = exports = defineComponent( {
 					dataType: 'json',
 					contentType: 'application/json'
 				} ).then( ( data ) => {
-					if ( data.comment.user.temp && !this.invalidatedAnonToken && mw.user.isAnon() ) {
-						// A temporary account was created, so we need to invalidate the CSRF token
-						actionApi.badToken( 'csrf' );
-						this.invalidatedAnonToken = true;
-					}
-
 					data.comment.ours = !data.comment.user.anon;
 					const newComment = new Comment( data.comment );
 
@@ -121,6 +114,16 @@ module.exports = exports = defineComponent( {
 					this.$props.onCancel();
 				} ).fail( ( _, result ) => {
 					let error;
+					if ( retryOnTokenMismatch &&
+						result.xhr &&
+						result.xhr.responseJSON &&
+						result.xhr.responseJSON.errorKey &&
+						result.xhr.responseJSON.errorKey === 'rest-badtoken'
+					) {
+						actionApi.badToken( 'csrf' );
+						return this.submitComment( false );
+					}
+
 					if ( result.xhr.responseJSON && Object.prototype.hasOwnProperty.call(
 						result.xhr.responseJSON, 'messageTranslations' ) ) {
 						if ( result.xhr.responseJSON.errorKey === 'yappin-submit-error-spam' ) {
