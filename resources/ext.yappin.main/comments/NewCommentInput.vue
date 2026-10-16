@@ -30,6 +30,7 @@ const store = require( '../store.js' );
 const Comment = require( '../comment.js' );
 
 const api = new mw.Rest();
+const actionApi = new mw.Api();
 
 const config = mw.config.get( [
 	'wgArticleId',
@@ -59,6 +60,7 @@ module.exports = exports = defineComponent( {
 	},
 	data() {
 		return {
+			invalidatedAnonToken: false,
 			store,
 			ve: null
 		};
@@ -70,9 +72,7 @@ module.exports = exports = defineComponent( {
 	},
 	methods: {
 		submitComment() {
-			const body = {
-				token: mw.user.tokens.get( 'csrfToken' )
-			};
+			const body = {};
 
 			// If we're replying to another comment, we don't need to provide a page ID
 			if ( this.$props.parentId ) {
@@ -90,44 +90,56 @@ module.exports = exports = defineComponent( {
 				body.wikitext = $( this.$refs.input ).val();
 			}
 
-			// Use .ajax here rather than .post to circumvent bug: https://bugs.jquery.com/ticket/12326/
-			api.ajax( '/comments/v0/comment', {
-				type: 'POST',
-				data: JSON.stringify( body ),
-				dataType: 'json',
-				contentType: 'application/json'
-			} ).then( ( data ) => {
-				data.comment.ours = !data.comment.user.anon;
-				const newComment = new Comment( data.comment );
+			actionApi.getToken( 'csrf' ).then( ( token ) => {
+				body.token = token;
 
-				if ( this.$props.parentId ) {
-					// Reply to an existing comment, add it to the end of the children list
-					const ix = this.store.comments.findIndex( ( c ) => c.id === this.$props.parentId );
-					this.store.comments[ ix ].children.push( newComment );
-				} else {
-					// Top-level comment, just throw it to the top of the comments list
-					this.store.comments.unshift( newComment );
-				}
-
-				this.$props.onCancel();
-			} ).fail( ( _, result ) => {
-				let error;
-				if ( result.xhr.responseJSON && Object.prototype.hasOwnProperty.call(
-					result.xhr.responseJSON, 'messageTranslations' ) ) {
-					if ( result.xhr.responseJSON.errorKey === 'yappin-submit-error-spam' ) {
-						// If the comment was rejected for spam/abuse, add a small cooldown
-						this.store.globalCooldown = 10;
+				// Use .ajax here rather than .post to circumvent bug: https://bugs.jquery.com/ticket/12326/
+				api.ajax( '/comments/v0/comment', {
+					type: 'POST',
+					data: JSON.stringify( body ),
+					dataType: 'json',
+					contentType: 'application/json'
+				} ).then( ( data ) => {
+					if ( data.comment.user.temp && !this.invalidatedAnonToken && mw.user.isAnon() ) {
+						// A temporary account was created, so we need to invalidate the CSRF token
+						actionApi.badToken( 'csrf' );
+						this.invalidatedAnonToken = true;
 					}
 
-					if ( config.wgContentLanguage in result.xhr.responseJSON.messageTranslations ) {
-						error = result.xhr.responseJSON.messageTranslations[ config.wgContentLanguage ];
+					data.comment.ours = !data.comment.user.anon;
+					const newComment = new Comment( data.comment );
+
+					if ( this.$props.parentId ) {
+						// Reply to an existing comment, add it to the end of the children list
+						const ix = this.store.comments.findIndex( ( c ) => c.id === this.$props.parentId );
+						this.store.comments[ ix ].children.push( newComment );
 					} else {
-						error = result.xhr.responseJSON.messageTranslations.en;
+						// Top-level comment, just throw it to the top of the comments list
+						this.store.comments.unshift( newComment );
 					}
-				} else {
-					error = mw.message( 'unknown-error' );
-				}
-				mw.notify( error, { type: 'error', tag: 'post-comment-error' } );
+
+					this.$props.onCancel();
+				} ).fail( ( _, result ) => {
+					let error;
+					if ( result.xhr.responseJSON && Object.prototype.hasOwnProperty.call(
+						result.xhr.responseJSON, 'messageTranslations' ) ) {
+						if ( result.xhr.responseJSON.errorKey === 'yappin-submit-error-spam' ) {
+							// If the comment was rejected for spam/abuse, add a small cooldown
+							this.store.globalCooldown = 10;
+						}
+
+						if ( config.wgContentLanguage in result.xhr.responseJSON.messageTranslations ) {
+							error = result.xhr.responseJSON.messageTranslations[ config.wgContentLanguage ];
+						} else {
+							error = result.xhr.responseJSON.messageTranslations.en;
+						}
+					} else {
+						error = mw.message( 'unknown-error' );
+					}
+					mw.notify( error, { type: 'error', tag: 'post-comment-error' } );
+				} );
+			}, ( code, data ) => {
+				mw.notify( actionApi.getErrorMessage( data ), { type: 'error' } );
 			} );
 		}
 	},
