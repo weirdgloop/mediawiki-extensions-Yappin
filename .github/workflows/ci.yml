@@ -9,7 +9,7 @@ jobs:
           - mw-branch: REL1_45
             php-version: 8.3
             experimental: false
-          - mw-branch: REL1_46
+          - mw-branch: REL1_47
             php-version: 8.3
             experimental: false
 
